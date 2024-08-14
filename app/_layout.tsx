@@ -1,13 +1,14 @@
-import { Stack } from "expo-router";
+import { Slot } from "expo-router";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { AuthProvider } from "@/hooks/useAuth";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     const [loaded, error] = useFonts({
-        "Lilita-One": require("../assets/fonts/LilitaOne-Regular.ttf"),
+        "lilita-one": require("../assets/fonts/LilitaOne-Regular.ttf"),
     });
 
     useEffect(() => {
@@ -21,8 +22,8 @@ export default function RootLayout() {
     }
 
     return (
-        <Stack>
-            <Stack.Screen name="(landing)" options={{ headerShown: false }} />
-        </Stack>
+        <AuthProvider>
+            <Slot />
+        </AuthProvider>
     );
 }
