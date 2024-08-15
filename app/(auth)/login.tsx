@@ -1,11 +1,19 @@
+import { Colors } from "@/constants/Colors";
 import useAuth from "@/hooks/useAuth";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import { View, Text, Pressable, TextInput } from "react-native";
+import {
+    View,
+    Text,
+    Pressable,
+    TextInput,
+    ActivityIndicator,
+    TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login() {
-    const { login } = useAuth();
+    const { user, login, loading } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -19,7 +27,7 @@ export default function Login() {
 
     return (
         <SafeAreaView className="flex-1 gap-y-20 justify-center items-center">
-            <View className="gap-y-5">
+            <View className="gap-y-5 w-60">
                 <View>
                     <Text
                         style={{ fontFamily: "lilita-one" }}
@@ -30,7 +38,7 @@ export default function Login() {
                     <TextInput
                         textAlign="center"
                         style={{ borderWidth: 2, borderRadius: 5 }}
-                        className="border-purple p-4 w-auto"
+                        className="border-purple p-4"
                         placeholder="i.e. example@gmail.com"
                         onChangeText={updateEmail}
                         value={email}
@@ -46,7 +54,7 @@ export default function Login() {
                     <TextInput
                         textAlign="center"
                         style={{ borderWidth: 2, borderRadius: 5 }}
-                        className="border-purple p-4 w-auto"
+                        className="border-purple p-4"
                         secureTextEntry={true}
                         onChangeText={updatePassword}
                         value={password}
@@ -56,30 +64,35 @@ export default function Login() {
 
             <View className="flex-row gap-x-12">
                 <Link href="/" asChild>
-                    <Pressable className="bg-purple px-6 py-3 rounded-md">
+                    <TouchableOpacity className="bg-purple px-6 py-3 rounded-md">
                         <Text
                             className="text-white text-lg tracking-wider"
                             style={{ fontFamily: "lilita-one" }}
                         >
                             BACK
                         </Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </Link>
-                <Pressable
-                    className="bg-purple px-6 py-3 rounded-md"
-                    onPress={() => {
-                        // update user object
-                        login();
-                        router.replace("/(home)/feed");
-                    }}
-                >
-                    <Text
-                        className="text-white text-lg tracking-wider"
-                        style={{ fontFamily: "lilita-one" }}
+                {loading ? (
+                    <ActivityIndicator
+                        size="large"
+                        color={Colors["light"].purple}
+                    />
+                ) : (
+                    <TouchableOpacity
+                        className="bg-purple px-6 py-3 rounded-md"
+                        onPress={() => {
+                            login(email.toLowerCase(), password);
+                        }}
                     >
-                        LOGIN
-                    </Text>
-                </Pressable>
+                        <Text
+                            className="text-white text-lg tracking-wider"
+                            style={{ fontFamily: "lilita-one" }}
+                        >
+                            LOGIN
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </SafeAreaView>
     );

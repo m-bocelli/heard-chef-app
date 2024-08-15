@@ -23,7 +23,7 @@ export default function HomeLayout() {
                         case "profile":
                             iconName = "person-outline";
                             break;
-                        case "index":
+                        case "feed":
                             iconName = "pizza-outline";
                             break;
                         case "matches":

@@ -1,7 +1,13 @@
 import useAuth from "@/hooks/useAuth";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import { View, Text, Pressable, TextInput } from "react-native";
+import {
+    View,
+    Text,
+    Pressable,
+    TextInput,
+    TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Signup() {
@@ -34,7 +40,7 @@ export default function Signup() {
 
     return (
         <SafeAreaView className="flex-1 gap-y-20 justify-center items-center">
-            <View className="gap-y-5">
+            <View className="gap-y-6 w-60">
                 <View>
                     <Text
                         style={{ fontFamily: "lilita-one" }}
@@ -45,7 +51,7 @@ export default function Signup() {
                     <TextInput
                         textAlign="center"
                         style={{ borderWidth: 2, borderRadius: 5 }}
-                        className="border-purple p-4 w-auto"
+                        className="border-purple p-4"
                         onChangeText={updateUsername}
                         value={username}
                     ></TextInput>
@@ -60,7 +66,7 @@ export default function Signup() {
                     <TextInput
                         textAlign="center"
                         style={{ borderWidth: 2, borderRadius: 5 }}
-                        className="border-purple p-4 w-auto"
+                        className="border-purple p-4"
                         placeholder="i.e. example@gmail.com"
                         onChangeText={updateEmail}
                         value={email}
@@ -76,7 +82,7 @@ export default function Signup() {
                     <TextInput
                         textAlign="center"
                         style={{ borderWidth: 2, borderRadius: 5 }}
-                        className="border-purple p-4 w-auto"
+                        className="border-purple p-4"
                         secureTextEntry={true}
                         onChangeText={updatePassword}
                         value={password}
@@ -96,7 +102,7 @@ export default function Signup() {
                             borderWidth: 2,
                             borderRadius: 5,
                         }}
-                        className="border-purple p-4 w-auto"
+                        className="border-purple p-4"
                         secureTextEntry={true}
                         onChangeText={(text) => setConfirmedPassword(text)}
                         value={confirmedPassword}
@@ -106,23 +112,21 @@ export default function Signup() {
 
             <View className="flex-row gap-x-12">
                 <Link href="/" asChild>
-                    <Pressable className="bg-purple px-6 py-3 rounded-md">
+                    <TouchableOpacity className="bg-purple px-6 py-3 rounded-md">
                         <Text
                             className="text-white text-lg tracking-wider"
                             style={{ fontFamily: "lilita-one" }}
                         >
                             BACK
                         </Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </Link>
-                <Pressable
+                <TouchableOpacity
                     style={{ opacity: validate() ? 1 : 0.2 }}
                     className="bg-purple px-6 py-3 rounded-md"
                     onPress={() => {
-                        // update user object
                         if (validate()) {
-                            login();
-                            router.replace("/(home)/feed");
+                            login(email.toLowerCase(), confirmedPassword);
                         }
                     }}
                 >
@@ -132,7 +136,7 @@ export default function Signup() {
                     >
                         SIGNUP
                     </Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
