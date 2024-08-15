@@ -53,7 +53,7 @@ export default function Herd() {
             <View className="gap-y-4">
                 {loading ? (
                     <ActivityIndicator size="large" color="purple" />
-                ) : members !== undefined ? (
+                ) : user?.herdId ? (
                     members.map((user) => (
                         <View key={user.id}>
                             <Text>- {user.username}</Text>

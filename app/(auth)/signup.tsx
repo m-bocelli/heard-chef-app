@@ -1,17 +1,17 @@
 import useAuth from "@/hooks/useAuth";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
 import {
     View,
     Text,
-    Pressable,
     TextInput,
     TouchableOpacity,
+    ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Signup() {
-    const { login } = useAuth();
+    const { signup, loading } = useAuth();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -121,22 +121,30 @@ export default function Signup() {
                         </Text>
                     </TouchableOpacity>
                 </Link>
-                <TouchableOpacity
-                    style={{ opacity: validate() ? 1 : 0.2 }}
-                    className="bg-purple px-6 py-3 rounded-md"
-                    onPress={() => {
-                        if (validate()) {
-                            login(email.toLowerCase(), confirmedPassword);
-                        }
-                    }}
-                >
-                    <Text
-                        className="text-white text-lg tracking-wider"
-                        style={{ fontFamily: "lilita-one" }}
+                {loading ? (
+                    <ActivityIndicator color="purple" size="large" />
+                ) : (
+                    <TouchableOpacity
+                        style={{ opacity: validate() ? 1 : 0.2 }}
+                        className="bg-purple px-6 py-3 rounded-md"
+                        onPress={() => {
+                            if (validate()) {
+                                signup(
+                                    username,
+                                    email.toLowerCase(),
+                                    confirmedPassword
+                                );
+                            }
+                        }}
                     >
-                        SIGNUP
-                    </Text>
-                </TouchableOpacity>
+                        <Text
+                            className="text-white text-lg tracking-wider"
+                            style={{ fontFamily: "lilita-one" }}
+                        >
+                            SIGNUP
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </SafeAreaView>
     );

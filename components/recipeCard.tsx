@@ -7,7 +7,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
         <View className="h-4/5 w-full justify-center items-center -mt-10">
             <Image
                 source={{
-                    uri: "https://images.esquiremag.ph/esquiremagph/images/2023/08/04/IMG_3546%20(1).PNG",
+                    uri: recipe.image1,
                 }}
                 className="w-full h-full justify-end rounded-xl"
             />

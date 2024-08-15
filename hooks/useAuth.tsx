@@ -67,6 +67,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
                                 },
                             }
                         );
+                        const profile = await res.json();
+                        setUser(profile);
                     } catch (err) {
                         console.error("API: Failed to signup", err);
                     } finally {

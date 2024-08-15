@@ -1,3 +1,4 @@
+import MatchedModal from "@/components/matchedModal";
 import RecipeCard from "@/components/recipeCard";
 import { API_BASE_URL, Recipe } from "@/constants/Types";
 import useAuth from "@/hooks/useAuth";
@@ -16,6 +17,7 @@ export default function Index() {
     const { user } = useAuth();
     const [feed, setFeed] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showMatched, setShowMatched] = useState(false);
     const swipeRef = useRef<any>(null);
 
     useEffect(() => {
@@ -48,7 +50,7 @@ export default function Index() {
                 const res = await fetch(query, { method: "POST" });
                 const data = await res.json();
                 if (data.matched) {
-                    console.log("Match!!!");
+                    setShowMatched(true);
                 }
             }
         } catch (err) {
@@ -70,23 +72,36 @@ export default function Index() {
     }
 
     async function resetAll() {
+        setLoading(true);
         try {
             if (user) {
                 await fetch(
-                    API_BASE_URL + "/users/clearlikes?userProfileId=" + user.id
+                    API_BASE_URL + "/users/clearlikes?userProfileId=" + user.id,
+                    { method: "DELETE" }
                 );
                 await fetch(
-                    API_BASE_URL + "/herds/clearmatches?herdId=" + user.herdId
+                    API_BASE_URL + "/herds/clearmatches?herdId=" + user.herdId,
+                    { method: "DELETE" }
                 );
-                getFeed();
+                await getFeed();
             }
         } catch (err) {
             console.error("API: Failed to reset sim", err);
+        } finally {
+            setLoading(false);
         }
+    }
+
+    function onModalClose() {
+        setShowMatched(false);
     }
 
     return (
         <View className="flex-1 justify-between items-center bg-white">
+            <MatchedModal
+                isVisible={showMatched}
+                onClose={onModalClose}
+            ></MatchedModal>
             {loading ? (
                 <ActivityIndicator
                     size="large"
@@ -127,7 +142,6 @@ export default function Index() {
                             );
                         }}
                         cardIndex={0}
-                        animateCardOpacity
                         showSecondCard={true}
                         stackSize={3}
                         verticalSwipe={false}
