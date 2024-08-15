@@ -1,5 +1,5 @@
 import { View } from "react-native";
 
 export default function Herd() {
-    return <View></View>;
+    return <View className="bg-white"></View>;
 }
