@@ -44,7 +44,10 @@ export default function Herd() {
 
     return (
         <View className="flex-1 bg-white items-center gap-y-20">
-            <Text style={{ fontFamily: "lilita-one" }} className="text-4xl">
+            <Text
+                style={{ fontFamily: "lilita-one" }}
+                className="text-4xl text-purple"
+            >
                 {herdName}
             </Text>
             <View className="gap-y-4">
@@ -52,7 +55,7 @@ export default function Herd() {
                     <ActivityIndicator size="large" color="purple" />
                 ) : members !== undefined ? (
                     members.map((user) => (
-                        <View>
+                        <View key={user.id}>
                             <Text>- {user.username}</Text>
                         </View>
                     ))

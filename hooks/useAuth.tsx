@@ -10,6 +10,7 @@ import {
 interface AuthContextType {
     user?: User | null;
     login: (email: string, password: string) => void;
+    signup: (username: string, email: string, password: string) => void;
     logout: () => void;
     loading: boolean;
 }
@@ -17,6 +18,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
     user: null,
     login: () => null,
+    signup: () => null,
     logout: () => null,
     loading: false,
 });
@@ -45,6 +47,28 @@ export function AuthProvider({ children }: PropsWithChildren) {
                         setUser(data.profile);
                     } catch (err) {
                         console.error("API: Failed to login", err);
+                    } finally {
+                        setLoading(false);
+                        router.replace("/(home)/feed");
+                    }
+                },
+                signup: async (username, email, password) => {
+                    setLoading(true);
+                    try {
+                        const res = await fetch(
+                            API_BASE_URL + "/users/signup?username=" + username,
+                            {
+                                method: "POST",
+                                body: JSON.stringify({ email, password }),
+                                headers: {
+                                    Accept: "application/json, text/plain",
+                                    "Content-Type":
+                                        "application/json;charset=UTF-8",
+                                },
+                            }
+                        );
+                    } catch (err) {
+                        console.error("API: Failed to signup", err);
                     } finally {
                         setLoading(false);
                         router.replace("/(home)/feed");

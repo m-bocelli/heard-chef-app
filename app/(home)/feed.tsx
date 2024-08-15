@@ -19,23 +19,44 @@ export default function Index() {
     const swipeRef = useRef<any>(null);
 
     useEffect(() => {
-        const getFeed = async () => {
-            try {
-                const res = await fetch(API_BASE_URL + "/recipes");
-                const data = await res.json();
-                setFeed(data);
-            } catch (err) {
-                console.error("Error retrieveing feed: ", err);
-            } finally {
-                setLoading(false);
-            }
-        };
         getFeed();
     }, []);
 
-    async function createLike(cardIndex: number) {
+    async function getFeed() {
+        try {
+            const res = await fetch(API_BASE_URL + "/recipes");
+            const data = await res.json();
+            setFeed(data);
+        } catch (err) {
+            console.error("Error retrieveing feed: ", err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async function onRightSwipe(cardIndex: number) {
         if (!feed[cardIndex]) return;
         const recipeId = feed[cardIndex].id;
+        await createLike(recipeId);
+        await checkForMatch(recipeId);
+    }
+
+    async function checkForMatch(recipeId: number) {
+        try {
+            if (user) {
+                const query = `${API_BASE_URL}/herds/checkmatch?userProfileId=${user.id}&herdId=${user.herdId}&recipeId=${recipeId}`;
+                const res = await fetch(query, { method: "POST" });
+                const data = await res.json();
+                if (data.matched) {
+                    console.log("Match!!!");
+                }
+            }
+        } catch (err) {
+            console.error("API: Error checking for match", err);
+        }
+    }
+
+    async function createLike(recipeId: number) {
         try {
             if (user) {
                 const query = `${API_BASE_URL}/users/like?userProfileId=${user.id}&recipeId=${recipeId}`;
@@ -48,8 +69,20 @@ export default function Index() {
         }
     }
 
-    function doNothing() {
-        console.log("Swiped left");
+    async function resetAll() {
+        try {
+            if (user) {
+                await fetch(
+                    API_BASE_URL + "/users/clearlikes?userProfileId=" + user.id
+                );
+                await fetch(
+                    API_BASE_URL + "/herds/clearmatches?herdId=" + user.herdId
+                );
+                getFeed();
+            }
+        } catch (err) {
+            console.error("API: Failed to reset sim", err);
+        }
     }
 
     return (
@@ -63,8 +96,7 @@ export default function Index() {
                 <View className="w-full">
                     <Swiper
                         ref={swipeRef}
-                        onSwipedRight={(cardIndex) => createLike(cardIndex)}
-                        onSwipedLeft={doNothing}
+                        onSwipedRight={(cardIndex) => onRightSwipe(cardIndex)}
                         cards={feed}
                         renderCard={(card) => {
                             return card ? (
@@ -73,13 +105,24 @@ export default function Index() {
                                     recipe={card}
                                 ></RecipeCard>
                             ) : (
-                                <View className="h-4/5 w-full justify-center items-center -mt-10 bg-white">
+                                <View className="h-4/5 w-full justify-evenly items-center -mt-10 bg-slate-950 rounded-xl">
                                     <Text
-                                        className="text-lg"
+                                        className="text-2xl text-white"
                                         style={{ fontFamily: "lilita-one" }}
                                     >
                                         No more recipes...
                                     </Text>
+                                    <TouchableOpacity
+                                        className="bg-purple px-6 py-2 rounded-full"
+                                        onPress={resetAll}
+                                    >
+                                        <Text
+                                            className="text-white text-xl"
+                                            style={{ fontFamily: "lilita-one" }}
+                                        >
+                                            RESET
+                                        </Text>
+                                    </TouchableOpacity>
                                 </View>
                             );
                         }}
