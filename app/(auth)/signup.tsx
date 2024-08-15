@@ -4,10 +4,16 @@ import { useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Login() {
+export default function Signup() {
     const { login } = useAuth();
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmedPassword, setConfirmedPassword] = useState("");
+
+    function updateUsername(username: string) {
+        setUsername(username);
+    }
 
     function updateEmail(email: string) {
         setEmail(email);
@@ -17,9 +23,33 @@ export default function Login() {
         setPassword(password);
     }
 
+    function validate() {
+        return (
+            username.length &&
+            email.length &&
+            password.length &&
+            password === confirmedPassword
+        );
+    }
+
     return (
         <SafeAreaView className="flex-1 gap-y-20 justify-center items-center">
             <View className="gap-y-5">
+                <View>
+                    <Text
+                        style={{ fontFamily: "lilita-one" }}
+                        className="text-lg text-purple"
+                    >
+                        USERNAME
+                    </Text>
+                    <TextInput
+                        textAlign="center"
+                        style={{ borderWidth: 2, borderRadius: 5 }}
+                        className="border-purple p-4 w-auto"
+                        onChangeText={updateUsername}
+                        value={username}
+                    ></TextInput>
+                </View>
                 <View>
                     <Text
                         style={{ fontFamily: "lilita-one" }}
@@ -47,14 +77,35 @@ export default function Login() {
                         textAlign="center"
                         style={{ borderWidth: 2, borderRadius: 5 }}
                         className="border-purple p-4 w-auto"
+                        secureTextEntry={true}
                         onChangeText={updatePassword}
                         value={password}
+                    ></TextInput>
+                </View>
+                <View style={{ opacity: password.length ? 1 : 0.2 }}>
+                    <Text
+                        style={{ fontFamily: "lilita-one" }}
+                        className="text-lg text-purple"
+                    >
+                        CONFIRM PASSWORD
+                    </Text>
+                    <TextInput
+                        editable={password.length > 0}
+                        textAlign="center"
+                        style={{
+                            borderWidth: 2,
+                            borderRadius: 5,
+                        }}
+                        className="border-purple p-4 w-auto"
+                        secureTextEntry={true}
+                        onChangeText={(text) => setConfirmedPassword(text)}
+                        value={confirmedPassword}
                     ></TextInput>
                 </View>
             </View>
 
             <View className="flex-row gap-x-12">
-                <Link href="/landing" asChild>
+                <Link href="/" asChild>
                     <Pressable className="bg-purple px-6 py-3 rounded-md">
                         <Text
                             className="text-white text-lg tracking-wider"
@@ -65,18 +116,21 @@ export default function Login() {
                     </Pressable>
                 </Link>
                 <Pressable
+                    style={{ opacity: validate() ? 1 : 0.2 }}
                     className="bg-purple px-6 py-3 rounded-md"
                     onPress={() => {
                         // update user object
-                        login();
-                        router.replace("/");
+                        if (validate()) {
+                            login();
+                            router.replace("/(home)/feed");
+                        }
                     }}
                 >
                     <Text
                         className="text-white text-lg tracking-wider"
                         style={{ fontFamily: "lilita-one" }}
                     >
-                        LOGIN
+                        SIGNUP
                     </Text>
                 </Pressable>
             </View>

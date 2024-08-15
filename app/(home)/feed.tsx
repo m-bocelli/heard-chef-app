@@ -4,7 +4,16 @@ import { useEffect, useState } from "react";
 import { View, Text, Button, Pressable } from "react-native";
 
 export default function Index() {
-    const [feed, setFeed] = useState([]);
+    const [feed, setFeed] = useState<RecipeCard[]>([
+        {
+            Id: 1,
+            Title: "Parma Rosa Penne with Basil",
+            Image: "https://pastatwins.com/wp-content/uploads/2022/03/Pink-Pasta-Sauce-12.jpg",
+            NetTime: 20,
+            Rating: 5,
+            NumReviews: 2468,
+        },
+    ]);
     const [loading, setLoading] = useState(false);
     // useEffect(() => {
     //     const getFeed = async () => {

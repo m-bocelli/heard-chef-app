@@ -7,15 +7,18 @@ export default function HomeLayout() {
     const { user } = useAuth();
 
     if (!user) {
-        return <Redirect href="/landing" />;
+        return <Redirect href="/(auth)/" />;
     }
 
     return (
         <Tabs
             screenOptions={({ route }) => ({
-                tabBarStyle: { height: 80 },
+                tabBarStyle: {
+                    height: 80,
+                    borderTopWidth: 0,
+                },
                 tabBarIcon: (props) => {
-                    let iconName = "person-outline";
+                    let iconName: any = "person-outline";
                     switch (route.name) {
                         case "profile":
                             iconName = "person-outline";
@@ -73,10 +76,10 @@ export default function HomeLayout() {
                 ),
             })}
         >
-            <Tabs.Screen name="profile" />
-            <Tabs.Screen name="index" />
+            <Tabs.Screen name="feed" />
             <Tabs.Screen name="matches" />
             <Tabs.Screen name="herd" />
+            <Tabs.Screen name="profile" />
         </Tabs>
     );
 }

@@ -1,4 +1,5 @@
 import useAuth from "@/hooks/useAuth";
+import { Redirect, router } from "expo-router";
 import { View, Text } from "react-native";
 
 export default function Profile() {

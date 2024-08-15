@@ -4,15 +4,10 @@ import { useState } from "react";
 import { View, Text, Pressable, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Signup() {
+export default function Login() {
     const { login } = useAuth();
-    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    function updateUsername(username: string) {
-        setUsername(username);
-    }
 
     function updateEmail(email: string) {
         setEmail(email);
@@ -25,22 +20,6 @@ export default function Signup() {
     return (
         <SafeAreaView className="flex-1 gap-y-20 justify-center items-center">
             <View className="gap-y-5">
-                <View>
-                    <Text
-                        style={{ fontFamily: "lilita-one" }}
-                        className="text-lg text-purple"
-                    >
-                        USERNAME
-                    </Text>
-                    <TextInput
-                        textAlign="center"
-                        style={{ borderWidth: 2, borderRadius: 5 }}
-                        className="border-purple p-4 w-auto"
-                        placeholder="i.e. example@gmail.com"
-                        onChangeText={updateUsername}
-                        value={username}
-                    ></TextInput>
-                </View>
                 <View>
                     <Text
                         style={{ fontFamily: "lilita-one" }}
@@ -68,6 +47,7 @@ export default function Signup() {
                         textAlign="center"
                         style={{ borderWidth: 2, borderRadius: 5 }}
                         className="border-purple p-4 w-auto"
+                        secureTextEntry={true}
                         onChangeText={updatePassword}
                         value={password}
                     ></TextInput>
@@ -75,7 +55,7 @@ export default function Signup() {
             </View>
 
             <View className="flex-row gap-x-12">
-                <Link href="/landing" asChild>
+                <Link href="/" asChild>
                     <Pressable className="bg-purple px-6 py-3 rounded-md">
                         <Text
                             className="text-white text-lg tracking-wider"
@@ -90,7 +70,7 @@ export default function Signup() {
                     onPress={() => {
                         // update user object
                         login();
-                        router.replace("/");
+                        router.replace("/(home)/feed");
                     }}
                 >
                     <Text
