@@ -1,23 +1,23 @@
 {
-    "expo": {
-        "name": "heard-chef-app",
-        "slug": "heard-chef-app",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/images/icon.png",
-        "scheme": "myapp",
-        "userInterfaceStyle": "automatic",
-        "splash": {
-            "image": "./assets/images/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#721B65"
-        },
-        "ios": {
-            "supportsTablet": true
-        },
-        "plugins": ["expo-router", "expo-font"],
-        "experiments": {
-            "typedRoutes": true
-        }
+  "expo": {
+    "name": "heard-chef-app",
+    "slug": "heard-chef-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#721B65"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "plugins": ["expo-router", "expo-font"],
+    "experiments": {
+      "typedRoutes": true
     }
+  }
 }
