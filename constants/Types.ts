@@ -1,5 +1,4 @@
-export const API_BASE_URL: string =
-  "https://heard-chef-api20240815032419.azurewebsites.net/api";
+export const API_BASE_URL: string = process.env.EXPO_PUBLIC_API_URL!;
 
 export interface Recipe {
   id: number;
