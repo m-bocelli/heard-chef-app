@@ -1,4 +1,5 @@
-import { API_BASE_URL, User } from "@/constants/Types";
+import { User } from "@/constants/Types";
+import { HttpClient } from "@/logic/HttpClient";
 import { router } from "expo-router";
 import {
   createContext,
@@ -34,16 +35,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
         login: async (email, password) => {
           setLoading(true);
           try {
-            const res = await fetch(API_BASE_URL + "/users/login", {
-              method: "POST",
-              body: JSON.stringify({ email, password }),
-              headers: {
-                Accept: "application/json, text/plain",
-                "Content-Type": "application/json;charset=UTF-8",
-              },
+            const user = await HttpClient.Post("users/login", {
+              email,
+              password,
             });
-            const data = await res.json();
-            setUser(data.profile);
+            setUser(user.profile);
           } catch (err) {
             console.error("API: Failed to login", err);
           } finally {
@@ -54,19 +50,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
         signup: async (username, email, password) => {
           setLoading(true);
           try {
-            const res = await fetch(
-              API_BASE_URL + "/users/signup?username=" + username,
-              {
-                method: "POST",
-                body: JSON.stringify({ email, password }),
-                headers: {
-                  Accept: "application/json, text/plain",
-                  "Content-Type": "application/json;charset=UTF-8",
-                },
-              }
+            const user = await HttpClient.Post(
+              "users/signup?username=" + username,
+              { email, password }
             );
-            const profile = await res.json();
-            setUser(profile);
+            setUser(user);
           } catch (err) {
             console.error("API: Failed to signup", err);
           } finally {

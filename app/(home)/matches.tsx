@@ -1,5 +1,6 @@
-import { API_BASE_URL, Recipe } from "@/constants/Types";
+import { Recipe } from "@/constants/Types";
 import useAuth from "@/hooks/useAuth";
+import { HttpClient } from "@/logic/HttpClient";
 import { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 
@@ -12,8 +13,7 @@ export default function Matches() {
   useEffect(() => {
     const fetchHerd = async () => {
       try {
-        const res = await fetch(API_BASE_URL + "/herds?herdId=" + user?.herdId);
-        const data = await res.json();
+        const data = await HttpClient.Get(`herds?herdId=${user?.herdId}`);
         setHerdName(data.name);
       } catch (err) {
         console.error("API: Failed to fetch herd", err);
@@ -25,10 +25,9 @@ export default function Matches() {
   useEffect(() => {
     const fetchMatches = async () => {
       try {
-        const res = await fetch(
-          API_BASE_URL + "/herds/matches?herdId=" + user?.herdId
+        const data = await HttpClient.Get(
+          `herds/matches?herdId=${user?.herdId}`
         );
-        const data = await res.json();
         setMatches(data);
       } catch (err) {
         console.error("API: Failed to fetch herd", err);
@@ -41,9 +40,7 @@ export default function Matches() {
 
   async function clearMatches() {
     try {
-      await fetch(API_BASE_URL + "/herds/clearmatches?herdId=" + user?.herdId, {
-        method: "DELETE",
-      });
+      await HttpClient.Delete(`herds/clearmatches?herdId=${user?.herdId}`);
       setMatches([]);
     } catch (err) {
       console.error("API: Failed to fetch herd", err);

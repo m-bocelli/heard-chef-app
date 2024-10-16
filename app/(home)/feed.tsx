@@ -1,6 +1,6 @@
 import MatchedModal from "@/components/matchedModal";
 import RecipeCard from "@/components/recipeCard";
-import { API_BASE_URL, Recipe } from "@/constants/Types";
+import { Recipe } from "@/constants/Types";
 import useAuth from "@/hooks/useAuth";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
@@ -12,6 +12,7 @@ import {
   Image,
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
+import { HttpClient } from "@/logic/HttpClient";
 
 export default function Index() {
   const { user } = useAuth();
@@ -25,10 +26,10 @@ export default function Index() {
   }, []);
 
   async function getFeed() {
+    setLoading(true);
     try {
-      const res = await fetch(API_BASE_URL + "/recipes");
-      const data = await res.json();
-      setFeed(data);
+      const recipes = await HttpClient.Get("recipes");
+      setFeed(recipes);
     } catch (err) {
       console.error("Error retrieveing feed: ", err);
     } finally {
@@ -46,9 +47,9 @@ export default function Index() {
   async function checkForMatch(recipeId: number) {
     try {
       if (user) {
-        const query = `${API_BASE_URL}/herds/checkmatch?userProfileId=${user.id}&herdId=${user.herdId}&recipeId=${recipeId}`;
-        const res = await fetch(query, { method: "POST" });
-        const data = await res.json();
+        const data = await HttpClient.Post(
+          `herds/checkmatch?userProfileId=${user.id}&herdId=${user.herdId}&recipeId=${recipeId}`
+        );
         if (data.matched) {
           setShowMatched(true);
         }
@@ -61,10 +62,10 @@ export default function Index() {
   async function createLike(recipeId: number) {
     try {
       if (user) {
-        const query = `${API_BASE_URL}/users/like?userProfileId=${user.id}&recipeId=${recipeId}`;
-        const res = await fetch(query, { method: "POST" });
-        const data = await res.json();
-        console.debug(data);
+        const result = await HttpClient.Post(
+          `users/like?userProfileId=${user.id}&recipeId=${recipeId}`
+        );
+        console.debug(result);
       }
     } catch (err) {
       console.error("API: Failed to like recipe", err);
@@ -75,14 +76,8 @@ export default function Index() {
     setLoading(true);
     try {
       if (user) {
-        await fetch(
-          API_BASE_URL + "/users/clearlikes?userProfileId=" + user.id,
-          { method: "DELETE" }
-        );
-        await fetch(
-          API_BASE_URL + "/herds/clearmatches?herdId=" + user.herdId,
-          { method: "DELETE" }
-        );
+        await HttpClient.Delete(`users/clearlikes?userProfileId=${user.id}`);
+        await HttpClient.Delete(`herds/clearmatches?herdId=${user.herdId}`);
         await getFeed();
       }
     } catch (err) {

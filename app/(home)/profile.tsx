@@ -1,5 +1,5 @@
-import { API_BASE_URL } from "@/constants/Types";
 import useAuth from "@/hooks/useAuth";
+import { HttpClient } from "@/logic/HttpClient";
 import { View, Text, TouchableOpacity } from "react-native";
 
 export default function Profile() {
@@ -8,10 +8,7 @@ export default function Profile() {
   async function clearLikes() {
     try {
       if (user) {
-        await fetch(
-          API_BASE_URL + "/users/clearlikes?userProfileId=" + user.id,
-          { method: "DELETE" }
-        );
+        await HttpClient.Delete(`users/clearlikes?userProfileId=${user.id}`);
       }
     } catch (err) {
       console.error("API: Failed to clear likes", err);

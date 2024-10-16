@@ -1,5 +1,6 @@
-import { API_BASE_URL, User } from "@/constants/Types";
+import { User } from "@/constants/Types";
 import useAuth from "@/hooks/useAuth";
+import { HttpClient } from "@/logic/HttpClient";
 import { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 
@@ -12,10 +13,8 @@ export default function Herd() {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const res = await fetch(API_BASE_URL + "/herds/" + user?.herdId);
-        const data = await res.json();
-        setMembers(data);
-        console.log(data);
+        const members = await HttpClient.Get(`herds/${user?.herdId}`);
+        setMembers(members);
       } catch (err) {
         console.error("API: Failed to fetch herd members", err);
       } finally {
@@ -28,9 +27,8 @@ export default function Herd() {
   useEffect(() => {
     const fetchHerd = async () => {
       try {
-        const res = await fetch(API_BASE_URL + "/herds?herdId=" + user?.herdId);
-        const data = await res.json();
-        setHerdName(data.name);
+        const herd = await HttpClient.Get(`/herds?herdId=${user?.herdId}`);
+        setHerdName(herd.name);
       } catch (err) {
         console.error("API: Failed to fetch herd", err);
       }

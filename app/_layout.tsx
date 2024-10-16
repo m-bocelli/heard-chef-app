@@ -3,6 +3,9 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { AuthProvider } from "@/hooks/useAuth";
+import { HttpClient } from "@/logic/HttpClient";
+
+HttpClient.baseUrl = process.env.EXPO_PUBLIC_API_URL!;
 
 SplashScreen.preventAutoHideAsync();
 
